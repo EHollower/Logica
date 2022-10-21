@@ -1,0 +1,118 @@
+%Lab 3
+
+%Ex.1 
+rev([], []).
+
+rev([H|T], M) :-
+    rev(T, U), append(U, [H], M).
+    
+palindrome(L) :-
+    rev(L, L).
+
+%Ex.2
+remove_duplicates([], []).
+
+remove_duplicates([H|T], U) :-
+    remove_duplicates(T, U),
+    member(H, U).
+    
+remove_duplicates([H|T], [H|U]) :-
+    remove_duplicates(T, U),
+    not(member(H, U)).
+
+%Ex.3
+atimes(_, [], 0).
+
+atimes(X, [X|T], N) :-
+    atimes(X, T, M), 
+    N is M + 1.
+
+atimes(X, [H|T], N) :-
+    atimes(X, T, N), 
+    X \== H.
+    
+%Sortari
+%InsertionSort
+insert(X, [], [X]).
+
+insert(X, [H|T], [X|[H|T]]) :-
+    X < H.
+
+insert(X, [H|T], [H|L]) :-
+    X >= H,
+    insert(X, T, L).
+    
+insertsort([], []).
+
+insertsort([H|T], L) :-
+    insertsort(T, L1),
+    insert(H, L1, L).
+
+%QuickSort
+
+split(_, [], [], []).
+
+split(H, [X|T], A, [X|B]) :-
+    H < X,
+    split(H, T, A, B).
+
+split(H, [X|T], [X|A], B) :-
+    H >= X,
+    split(H, T, A, B).
+
+quicksort([], []).
+
+quicksort([H|T], L):-
+    split(H, T, A, B),
+    quicksort(A, M), quicksort(B, N),
+    append(M, [H|N], L).
+    
+%Arbori Binari
+%parcurgere arborele inordine
+srd(vid, []).
+
+srd(arb(R, T, U), L) :-
+    srd(T, L1), srd(U, L2),
+    append(L1, [R|L2], L).
+
+%Ex. 6
+b_ins(X, vid, arb(X, vid, vid)).
+
+b_ins(X, arb(R, T, U), arb(R, V, U) :-
+    X < R,
+    b_ins(X, T, V).
+      
+b_ins(X, arb(R, T, U), arb(R, T, V)) :-
+      X >= R,
+      b_ins(X, U, V).
+ 
+b_list([], vid).
+
+b_list([H|T], V) :-
+      b_list(T, W), 
+      b_ins(H, W, V).
+      
+b_sort(L, X) :-
+      b_list(L, T), srd(T, X).
+    
+ 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
