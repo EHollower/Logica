@@ -1,0 +1,94 @@
+%ex1
+vars(X, [X]) :-
+    atom(X).
+
+vars(non(X), L) :-
+    vars(X, L).
+
+vars(si(X, Y), L) :-
+    vars(X, L1), vars(Y, L2),
+    union(L1, L2, L).
+
+vars(sau(X, Y), L) :-
+    vars(X, L1), vars(Y, L2),
+    union(L1, L2, L).
+
+vars(imp(X, Y), L) :-
+    vars(X, L1), vars(Y, L2),
+    union(L1, L2, L).
+
+%ex2
+val(X, [(X, A) | _], A).
+val(X, [_ | T], A) :-
+    val(X, T, A).
+
+%ex3
+bnon(0, 1).
+bnon(1, 0).
+
+bsi(1, 1, 1).
+bsi(0, 0, 0).
+bsi(0, 1, 0).
+bsi(1, 0, 0).
+
+bsau(1, 0, 1).
+bsau(0, 1, 1).
+bsau(1, 1, 1).
+bsau(0, 0, 0).
+
+bimp(X, Y, Z) :-
+    bnon(X, NX), bsau(NX, Y, Z).
+
+%ex4
+eval(X, E, A) :-
+    atom(X),
+    member((X, A), E).
+
+eval(non(X), E, A) :-
+    eval(X, E, B), 
+    bnon(B, A).
+
+eval(si(X, Y), E, A) :-
+    eval(X, E, B), eval(Y, E, C),
+    bsi(B, C, A).
+
+eval(sau(X, Y), E, A) :-
+    eval(X, E, B), eval(Y, E, C),
+    bsau(B, C, A).
+
+eval(imp(X, Y), E, A) :-
+    eval(X, E, B), eval(Y, E, C),
+    bimp(B, C, A).
+        
+                       
+%ex5
+evals(_, [], []).
+evals(F, [H | T1], [V | T2]) :-
+    eval(F, H, V),
+    evals(F, T1, T2).
+
+%ex6
+adauga(_, [], []).
+adauga(X, [E | T], [[(X, 0) | E], [(X, 1) | E] | L]):-
+    adauga(X, T, L).
+    
+evs([], [[]]).
+evs([X | T], L) :-
+    evs(T, M),
+    adauga(X, M, L).
+
+%ex7
+all_evals(X, Y) :-
+    vars(X, S),
+    evs(S, W),
+    evals(X, W, Y).
+                       
+%ex8
+tot_unu([]).
+tot_unu([1 | T]) :-
+    tot_unu(T).
+    
+taut(X) :-
+    all_evals(X, L),
+    tot_unu(L).
+                   
